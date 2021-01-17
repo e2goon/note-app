@@ -9,6 +9,7 @@ module.exports = {
   },
   variants: {
     extend: {
+      ringColor: ['hover'],
       backgroundColor: ['hover', 'checked'],
       borderColor: ['hover', 'checked'],
     },
