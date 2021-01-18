@@ -1,7 +1,12 @@
-import { FC } from 'react'
+import { FC, SyntheticEvent } from 'react'
 import cc from 'classcat'
 
-const Checkbox: FC<{ className?: string }> = ({ className }) => {
+type CheckboxType = {
+  className?: string
+  onChange?: (e: SyntheticEvent) => void
+}
+
+const Checkbox: FC<CheckboxType> = ({ className, onChange }) => {
   const checkbox = [
     'appearance-none',
     'w-6',
@@ -13,10 +18,15 @@ const Checkbox: FC<{ className?: string }> = ({ className }) => {
     'focus:outline-none',
     'focus:ring-2',
     'focus:ring-gray-600',
-    'hover:bg-gray-300',
     'checked:bg-gray-900',
   ]
-  return <input type="checkbox" className={cc([checkbox, className])} />
+  return (
+    <input
+      type="checkbox"
+      className={cc([checkbox, className])}
+      onChange={onChange}
+    />
+  )
 }
 
 export default Checkbox

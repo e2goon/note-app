@@ -1,8 +1,13 @@
 import { atom } from 'recoil'
 
-const bodyClassState = atom({
-  key: 'nameState',
-  default: '',
+const todosState = atom({
+  key: 'todosState',
+  default: [{
+    id: 0,
+    name: 'Task Name - 1',
+    comments: '',
+    checked: false,
+  }],
 })
 
-export { bodyClassState }
+export { todosState }
