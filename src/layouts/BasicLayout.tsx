@@ -19,7 +19,7 @@ const Layout: FC<LayoutType> = ({ className, isBack = false, children }) => {
           rel="stylesheet"
         />
       </Head>
-      <div className={`font-body mx-auto max-w-md ${className && className}`}>
+      <div className={`font-body mx-auto max-w-md px-4 ${className && className}`}>
         <header className="flex flex-column items-center h-28">
           {isBack ? (
             <button

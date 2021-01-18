@@ -29,7 +29,7 @@ const TaskDetail: NextPage = () => {
         <section className="my-10 mb-0">
           <button
             type="button"
-            className="w-full py-4 px-6 bg-gray-900 text-white rounded-2xl"
+            className="w-full py-4 px-6 bg-gray-900 text-white rounded-2xl focus:outline-none"
           >
             Save
           </button>
