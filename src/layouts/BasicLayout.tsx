@@ -28,7 +28,7 @@ const Layout: FC<LayoutType> = ({ className, isBack = false, children }) => {
               className="flex items-center text-xl font-bold"
             >
               <IoIosArrowBack className="inline-block mr-1" />
-              <span>TASKS</span>
+              <span>Todos</span>
             </button>
           ) : (
             <h1 className="flex-1 font-bold text-xl text-center">

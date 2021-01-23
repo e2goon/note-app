@@ -1,4 +1,9 @@
-import { useState, createRef, SyntheticEvent, ChangeEvent } from 'react'
+import {
+  useState,
+  createRef,
+  SyntheticEvent,
+  FormEvent,
+} from 'react'
 import { NextPage } from 'next'
 import Link from 'next/link'
 import { useRecoilState } from 'recoil'
@@ -6,30 +11,73 @@ import Layout from '@/layouts/BasicLayout'
 import Checkbox from '@/components/Checkbox'
 import { todosState } from '@/states'
 
+const uuid = (): string => {
+  let i = 0
+  let random = null
+  let uuid = ''
+  for (i; i < 32; i++) {
+    random = (Math.random() * 16) | 0
+    if (i === 8 || i === 12 || i === 16 || i === 20) {
+      uuid += '-'
+    }
+    uuid += (i === 12 ? 4 : i === 16 ? (random & 3) | 8 : random).toString(16)
+  }
+  return uuid
+}
+
 const Tasks: NextPage = () => {
   const textInput = createRef<HTMLInputElement>()
   const [input, setInput] = useState('')
   const [todos, setTodos] = useRecoilState(todosState)
-  const handleChange = ({ target }) => setInput(target.value)
+
+  const handleChange = (e: FormEvent<HTMLInputElement>) =>
+    setInput(e.currentTarget.value)
+
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
-    if (input.length <= 0) return;
+
+    if (input.length <= 0) return
+
     const todo = {
-      id: 0,
+      id: uuid(),
       name: input,
-      comments: '',
       checked: false,
     }
     setTodos([todo, ...todos])
     setInput('')
     textInput.current.focus()
   }
-  const handleToggle = (todo) => (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(todo, e.target.checked)
+
+  const handleToggle = (todo) => () => {
+    const newTodos = todos.map((item) => {
+      return item !== todo
+        ? item
+        : { ...item, ...{ checked: !item.checked } }
+    })
+    setTodos(newTodos)
   }
+
+  const renderFilteredTodos = (isChecked: boolean) => {
+    const filteredTodos = todos.filter((todo) => todo.checked === isChecked)
+    return filteredTodos.map((todo, index) => (
+      <div key={index} role="listitem" className="my-4 relative">
+        <Link href={`/${todo.id}`}>
+          <a className="block py-4 px-6 w-full bg-white rounded-2xl outline-none hover:underline focus:ring-2 focus:ring-gray-600">
+            {todo.name}
+          </a>
+        </Link>
+        <Checkbox
+          onChange={handleToggle(todo)}
+          checked={todo.checked}
+          className="absolute top-1/2 right-4 transform-gpu -translate-y-1/2"
+        />
+      </div>
+    ))
+  }
+
   return (
     <Layout>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="my-10">
         <fieldset className="flex">
           <legend className="sr-only">New Task</legend>
           <label className="flex-1 mr-2">
@@ -40,6 +88,7 @@ const Tasks: NextPage = () => {
               placeholder="Write a new task"
               value={input}
               onChange={handleChange}
+              autoFocus={true}
             />
           </label>
           <button
@@ -54,39 +103,12 @@ const Tasks: NextPage = () => {
 
       <section className="my-10">
         <h2 className="mb-4 text-lg font-bold">Todos</h2>
-        <div role="list">
-          {todos.map((todo, index) => (
-            <div key={index} role="listitem" className="my-4 relative">
-              <Link href={`/${todo.id}`}>
-                <a className="block py-4 px-6 w-full bg-white rounded-2xl outline-none hover:underline focus:ring-2 focus:ring-gray-600">
-                  {todo.name}
-                </a>
-              </Link>
-              <Checkbox
-                onChange={handleToggle(todo)}
-                className="absolute top-1/2 right-4 transform-gpu -translate-y-1/2"
-              />
-            </div>
-          ))}
-        </div>
+        <div role="list">{renderFilteredTodos(false)}</div>
       </section>
 
       <section>
         <h2 className="mb-4 text-lg font-bold">Done</h2>
-        <div role="list">
-          {todos
-            .filter((todo) => todo.checked === true)
-            .map((todo) => (
-              <div role="listitem" className="my-4 relative">
-                <Link href="/id">
-                  <a className="block py-4 px-6 w-full bg-white rounded-2xl outline-none hover:underline focus:ring-2 focus:ring-gray-600">
-                    {todo.name}
-                  </a>
-                </Link>
-                <Checkbox className="absolute top-1/2 right-4 transform-gpu -translate-y-1/2" />
-              </div>
-            ))}
-        </div>
+        <div role="list">{renderFilteredTodos(true)}</div>
       </section>
     </Layout>
   )

@@ -4,9 +4,11 @@ import cc from 'classcat'
 type CheckboxType = {
   className?: string
   onChange?: (e: SyntheticEvent) => void
+  checked?: boolean
+  readonly?: boolean
 }
 
-const Checkbox: FC<CheckboxType> = ({ className, onChange }) => {
+const Checkbox: FC<CheckboxType> = ({ className, onChange, checked, readonly }) => {
   const checkbox = [
     'appearance-none',
     'w-6',
@@ -24,7 +26,9 @@ const Checkbox: FC<CheckboxType> = ({ className, onChange }) => {
     <input
       type="checkbox"
       className={cc([checkbox, className])}
+      checked={checked}
       onChange={onChange}
+      readOnly={readonly}
     />
   )
 }

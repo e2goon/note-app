@@ -1,13 +1,15 @@
-import { atom } from 'recoil'
+import { atom, RecoilState } from 'recoil'
 
-const todosState = atom({
+type TodoType = {
+  id: string
+  name: string
+  checked: boolean
+  comments?: string
+}
+
+const todosState: RecoilState<TodoType[]> = atom({
   key: 'todosState',
-  default: [{
-    id: 0,
-    name: 'Task Name - 1',
-    comments: '',
-    checked: false,
-  }],
+  default: [],
 })
 
 export { todosState }
