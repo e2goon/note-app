@@ -20,8 +20,7 @@ const TaskDetail: NextPage = () => {
     const newTodos = todos.map((item) =>
       item !== todo ? item : { ...todo, ...{ comments: comment } }
     )
-    setTodos(newTodos);
-    console.log(newTodos);
+    setTodos(newTodos)
   }
 
   return (
@@ -65,3 +64,11 @@ const TaskDetail: NextPage = () => {
 }
 
 export default TaskDetail
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      todo: {},
+    },
+  }
+}
